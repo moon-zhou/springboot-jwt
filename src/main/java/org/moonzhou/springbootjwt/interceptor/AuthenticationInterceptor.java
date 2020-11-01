@@ -1,8 +1,7 @@
 package org.moonzhou.springbootjwt.interceptor;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.*;
 import org.moonzhou.springbootjwt.annotation.TokenRequired;
 import org.moonzhou.springbootjwt.entity.User;
 import org.moonzhou.springbootjwt.service.UserService;
@@ -17,6 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
+ * jwt验证处理拦截器
+ *
+ * 先验证token，通过之后才能获取数据查库，减少数据库的压力，查库放在最后操作
+ * TODO 但是此处的验证签名使用的是密码，后续方案上可进行优化
  * @author moon-zhou <ayimin1989@163.com>
  * @version V1.0.0
  * @description
@@ -41,7 +44,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (method.isAnnotationPresent(TokenRequired.class)) {
             TokenRequired userLoginToken = method.getAnnotation(TokenRequired.class);
             if (userLoginToken.required()) {
-                // 执行认证
+                // 执行认证的参数合法性校验
                 if (token == null) {
                     // ResultDTO.failure(new ResultError(UserError.TOKEN_IS_NOT_EXIT));
                     throw new RuntimeException("无token，请重新登录");
@@ -62,13 +65,24 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
                 // 验证 token
                 try {
-                    if (!JwtUtil.verity(token, user.getPassword())) {
+                    if (!JwtUtil.verify(token, user.getPassword())) {
                         //  ResultDTO.failure(new ResultError(UserError.TOKEN_IS_VERITYED));
                         throw new RuntimeException("无效的令牌");
                     }
+                } catch (SignatureVerificationException e) {
+                    throw new RuntimeException("签名不一致");
+                } catch (TokenExpiredException e) {
+                    throw new RuntimeException("令牌过期");
+                } catch (AlgorithmMismatchException e) {
+                    throw new RuntimeException("算法不匹配");
+                } catch (InvalidClaimException e) {
+                    throw new RuntimeException("失效的payload");
                 } catch (JWTVerificationException e) {
                     throw new RuntimeException("401");
+                } catch (Exception e) {
+                    throw new RuntimeException("token无效");
                 }
+
                 return true;
             }
         }

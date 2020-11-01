@@ -48,6 +48,11 @@ public class UserController {
     @TokenRequired
     @GetMapping("/hello")
     public String getMessage(){
-        return "你好哇，我是小码仔";
+        return "登录了才能看到我哦";
+    }
+
+    @GetMapping("/hi")
+    public String sayHi() {
+        return "你好呀，无需登录";
     }
 }

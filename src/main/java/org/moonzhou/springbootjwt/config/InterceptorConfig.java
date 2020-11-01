@@ -2,6 +2,7 @@ package org.moonzhou.springbootjwt.config;
 
 import org.moonzhou.springbootjwt.interceptor.AuthenticationInterceptor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @date 2020/5/5 21:17
  * @since 1.0
  */
+@Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
     @Bean
     public AuthenticationInterceptor authenticationInterceptor() {

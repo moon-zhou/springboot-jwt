@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author moonzhou
  */
 @SpringBootApplication
-@MapperScan("org")
+//@MapperScan("org")
 public class SpringbootJwtApplication {
 
 	public static void main(String[] args) {

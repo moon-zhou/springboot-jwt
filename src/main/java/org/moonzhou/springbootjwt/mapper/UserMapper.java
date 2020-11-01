@@ -1,5 +1,6 @@
 package org.moonzhou.springbootjwt.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.moonzhou.springbootjwt.entity.User;
 
@@ -10,6 +11,7 @@ import org.moonzhou.springbootjwt.entity.User;
  * @date 2020/5/5 20:58
  * @since 1.0
  */
+@Mapper
 public interface UserMapper {
     /**
      * 根据用户名查询用户信息

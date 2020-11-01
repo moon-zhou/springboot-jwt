@@ -43,7 +43,7 @@ public class JwtUtil {
                 .withClaim("username", username).withExpiresAt(date).sign(algorithm);
     }
 
-    public static boolean verity(String token, String password) {
+    public static boolean verify(String token, String password) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(password);
             JWTVerifier verifier = JWT.require(algorithm).build();
@@ -52,6 +52,8 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             return false;
         } catch (JWTVerificationException e) {
+            return false;
+        } catch (Exception e) {
             return false;
         }
     }
